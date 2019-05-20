@@ -19,7 +19,14 @@ setup(
         'pyyaml',
         'munch',
         'influxdb',
-        'pyindi-client'
+        'pyindi-client',
+        'gevent',
+        'gevent-websocket',
+        'flask',
+        'flask-environments',
+        'flask-socketio',
+        'flask-restplus',
+        'flask-cors',
     ],
     license='AGPL-3.0',
     description='Talks to an AAG Cloudwatcher via INDI, exposes weather data over REST and WebSockets.  Also forwards to InfluxDB.',
@@ -28,6 +35,11 @@ setup(
     url='http://github.com/telescopio-montemayor/weather-server',
     author='Adrián Pardini',
     author_email='github@tangopardo.com.ar',
+    entry_points={
+        'console_scripts': [
+            'cloudwatcher-weather-server=cloudwatcher_weather_server:main'
+        ]
+    },
     classifiers=[
         'Environment :: Web Environment',
         'Development Status :: 2 - Pre-Alpha',

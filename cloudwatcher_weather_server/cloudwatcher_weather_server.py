@@ -188,14 +188,14 @@ def main():
 
     def ws_send_new_data(device, *args, **kwargs):
         payload = attr.asdict(device)
-        socketio.emit('new_data', payload)
+        socketio.emit('new_data', payload, broadcast=True)
 
     def ws_send_online(device, *args, **kwargs):
         payload = attr.asdict(device)
         if device.online:
-            socketio.emit('online', payload)
+            socketio.emit('online', payload, broadcast=True)
         else:
-            socketio.emit('offline', payload)
+            socketio.emit('offline', payload, broadcast=True)
 
     watcher.new_data.connect(ws_send_new_data)
     watcher.online_status.connect(ws_send_online)

@@ -40,6 +40,7 @@ class IndiWatcher(PyIndi.BaseClient):
         self.port = port
         self.device = device
         self.indi_device = None
+        self.indi_connected = False
 
         self.__connecting = False
 
@@ -71,7 +72,7 @@ class IndiWatcher(PyIndi.BaseClient):
 
         self.__connecting = True
 
-        while not self.indi_device:
+        while not self.indi_connected:
             self.connectServer()
             socketio.sleep(1)
 
@@ -130,9 +131,11 @@ class IndiWatcher(PyIndi.BaseClient):
 
     def serverConnected(self):
         log.info('Connected to INDI Server')
+        self.indi_connected = True
 
     def serverDisconnected(self, code):
         log.info('Connection to INDI Server closed')
+        self.indi_connected = False
         self.online = False
         self.indi_device = None
         self.start()

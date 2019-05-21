@@ -33,7 +33,11 @@ class IndiWatcher(PyIndi.BaseClient):
         self.host = host
         self.port = port
         self.device = device
+        self.indi_device = None
 
+        self.__connecting = False
+
+        self.watchDevice(self.device.name)
         self.setServer(host, port)
 
     @property
@@ -54,9 +58,16 @@ class IndiWatcher(PyIndi.BaseClient):
         return value
 
     def start(self):
-        self.watchDevice(self.device.name)
-        while not self.connectServer():
+        if self.__connecting:
+            return
+
+        self.__connecting = True
+
+        while not self.indi_device:
+            self.connectServer()
             socketio.sleep(1)
+
+        self.__connecting = False
 
     def newDevice(self, device):
         name = device.getDeviceName()

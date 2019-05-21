@@ -21,5 +21,6 @@ Device = api.model('Device', {
     'refreshPeriod': fields.Integer,
     'online': fields.Boolean,
     'serial_port': fields.String,
-    'sensors': fields.Nested(model=Sensors)
+    'sensors': fields.Nested(model=Sensors),
+    'last_update': fields.DateTime(),
 })

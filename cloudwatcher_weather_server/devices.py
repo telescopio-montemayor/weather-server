@@ -40,6 +40,7 @@ class Device:
     serial_port = attr.ib(default=None, init=False)
     online = attr.ib(default=False)
     sensors = attr.ib(factory=Sensors)
+    last_update = attr.ib(default=None)
 
 
 def create(**kwargs):

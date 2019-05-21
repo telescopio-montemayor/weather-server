@@ -13,7 +13,8 @@ from flask import Flask, render_template, g
 from flask.json import jsonify
 from flask_socketio import SocketIO
 
-from . import api
+
+from . import api, devices
 
 log = logging.getLogger('cloudwatcher-weather-server')
 
@@ -43,6 +44,23 @@ def main():
                         type=int,
                         help='The port number for the server to listen on. Defaults to %(default)s')
 
+    parser.add_argument('--indi-host',
+                        required=False,
+                        default='127.0.0.1',
+                        help='The hostname or IP address for the INDI server to connect to. Defaults to %(default)s')
+
+    parser.add_argument('--indi-port',
+                        required=False,
+                        default=7624,
+                        type=int,
+                        help='The port number for the INDI server to connect to. Defaults to %(default)s')
+
+    parser.add_argument('--indi-device',
+                        required=False,
+                        default='AAG Cloud Watcher',
+                        help='The INDI device name to monitor. Defaults to %(default)s')
+
+
     args = parser.parse_args()
 
     if args.debug:
@@ -51,5 +69,7 @@ def main():
     else:
         logging.basicConfig()
         log.setLevel(level=logging.INFO)
+
+    device = devices.create(name=args.indi_device)
 
     socketio.run(app, host=args.host, port=args.port, use_reloader=False, debug=True, log_output=True)

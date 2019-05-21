@@ -186,4 +186,18 @@ def main():
     watcher = IndiWatcher(device=device, host=args.indi_host, port=args.indi_port)
     socketio.start_background_task(watcher.start)
 
+    def ws_send_new_data(device, *args, **kwargs):
+        payload = attr.asdict(device)
+        socketio.emit('new_data', payload)
+
+    def ws_send_online(device, *args, **kwargs):
+        payload = attr.asdict(device)
+        if device.online:
+            socketio.emit('online', payload)
+        else:
+            socketio.emit('offline', payload)
+
+    watcher.new_data.connect(ws_send_new_data)
+    watcher.online_status.connect(ws_send_online)
+
     socketio.run(app, host=args.host, port=args.port, use_reloader=False, debug=True, log_output=True)

@@ -22,6 +22,7 @@ setup(
         'pyindi-client',
         'gevent',
         'gevent-websocket',
+        'blinker',
         'flask',
         'flask-environments',
         'flask-socketio',

@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+import gevent # noqa
+from gevent import monkey
+monkey.patch_all() # noqa
 
 import logging
 import argparse

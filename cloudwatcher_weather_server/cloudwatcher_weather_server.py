@@ -8,6 +8,9 @@ import logging
 import argparse
 from datetime import datetime
 
+import attr
+
+from blinker import signal
 
 from flask import Flask, render_template, g
 from flask.json import jsonify
@@ -28,6 +31,9 @@ socketio = SocketIO(app, async_mode='gevent')
 
 
 class IndiWatcher(PyIndi.BaseClient):
+    new_data = signal('new_data')
+    online_status = signal('online_status')
+
     def __init__(self, device, host='localhost', port=7624):
         super(IndiWatcher, self).__init__()
         self.host = host
@@ -54,6 +60,8 @@ class IndiWatcher(PyIndi.BaseClient):
             else:
                 log.info('Device disconnected')
                 device.online = False
+
+            self.online_status.send(device)
 
         return value
 
@@ -105,6 +113,7 @@ class IndiWatcher(PyIndi.BaseClient):
             for idx in range(nvp.nnp):
                 prop = nvp[idx]
                 setattr(self.device.sensors, prop.name, prop.value)
+            self.new_data.send(self.device)
 
     def newText(self, tvp):
         pass

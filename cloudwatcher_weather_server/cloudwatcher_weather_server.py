@@ -12,6 +12,8 @@ import attr
 
 from blinker import signal
 
+from influxdb import InfluxDBClient
+
 from flask import Flask, render_template, g
 from flask.json import jsonify
 from flask_socketio import SocketIO
@@ -175,6 +177,17 @@ def main():
                         default='AAG Cloud Watcher',
                         help='The INDI device name to monitor. Defaults to %(default)s')
 
+    parser.add_argument('--influx',
+                        required=False,
+                        default=False,
+                        action='store_true',
+                        help='Store weather data in InfluxDB')
+
+    parser.add_argument('--influx-dsn',
+                        required=False,
+                        default='influxdb://root:root@localhost:8086/weather',
+                        help='The InfluxDB data source name. Defaults to %(default)s')
+
 
     args = parser.parse_args()
 
@@ -202,5 +215,21 @@ def main():
 
     watcher.new_data.connect(ws_send_new_data)
     watcher.online_status.connect(ws_send_online)
+
+    if args.influx:
+        client = InfluxDBClient.from_dsn(args.influx_dsn)
+
+        def influx_send_measure(device, *args, **kwargs):
+            payload = [
+                {
+                    'measurement': 'weather',
+                    'time': device.last_update,
+                    'fields': attr.asdict(device.sensors)
+                }
+            ]
+
+            client.write_points(payload)
+
+        watcher.new_data.connect(influx_send_measure)
 
     socketio.run(app, host=args.host, port=args.port, use_reloader=False, debug=True, log_output=True)

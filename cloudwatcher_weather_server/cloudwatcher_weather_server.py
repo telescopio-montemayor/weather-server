@@ -90,6 +90,7 @@ class IndiWatcher(PyIndi.BaseClient):
 
     def newNumber(self, nvp):
         if nvp.name == 'sensors':
+            self.device.last_update = datetime.utcnow()
             for idx in range(nvp.nnp):
                 prop = nvp[idx]
                 setattr(self.device.sensors, prop.name, prop.value)

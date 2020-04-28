@@ -25,6 +25,7 @@ class Sensors:
     rainSensorHeater = attr.ib(default=0)
     brightnessSensor = attr.ib(default=0)
     ambientTemperatureSensor = attr.ib(default=0)
+    windSpeed = attr.ib(default=0)
 
 
 @attr.s

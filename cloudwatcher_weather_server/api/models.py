@@ -12,6 +12,7 @@ Sensors = api.model('Sensors', {
     'rainSensorHeater': fields.Float(default=0),
     'brightnessSensor': fields.Float(default=0),
     'ambientTemperatureSensor': fields.Float(default=0),
+    'windSpeed': fields.Float(default=0),
 })
 
 

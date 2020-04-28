@@ -26,7 +26,7 @@ setup(
         'flask',
         'flask-environments',
         'flask-socketio',
-        'flask-restplus',
+        'flask-restx',
         'flask-cors',
     ],
     license='AGPL-3.0',

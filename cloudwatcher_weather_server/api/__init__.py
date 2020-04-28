@@ -3,7 +3,7 @@ import logging
 from flask import current_app as app
 from flask import Blueprint
 
-from flask_restplus import Api, Resource
+from flask_restx import Api, Resource
 from flask_cors import CORS
 
 

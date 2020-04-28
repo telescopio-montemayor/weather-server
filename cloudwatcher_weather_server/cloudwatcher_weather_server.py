@@ -174,7 +174,7 @@ def main():
 
     parser.add_argument('--indi-device',
                         required=False,
-                        default='AAG Cloud Watcher',
+                        default='AAG Cloud Watcher NG',
                         help='The INDI device name to monitor. Defaults to %(default)s')
 
     parser.add_argument('--influx',
